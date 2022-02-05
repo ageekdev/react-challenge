@@ -10,9 +10,10 @@ import useValidator from "@packages/react-joi"
 import Joi from "joi"
 import {
     validateCardNumber,
+    validateExpDate,
     formatCardNumber,
     formatCardExpiry,
-} from "creditcardutils"
+} from "@utils/creditcardutils"
 
 // Styled Elements
 import {
@@ -88,10 +89,22 @@ const CheckoutForm: FC<CheckoutFormProps> = ({
                     "string.cardNumber": "Must be a valid card",
                     "any.required": "Required",
                 }),
-            card_expire: Joi.string().required().messages({
-                "string.empty": "Required",
-                "any.required": "Required",
-            }),
+            card_expire: Joi.string()
+                .custom((value, helpers) => {
+                    if (value) {
+                        if (!validateExpDate(value)) {
+                            return helpers.error("string.expDate")
+                        }
+                    }
+
+                    return value
+                })
+                .required()
+                .messages({
+                    "string.empty": "Required",
+                    "string.expDate": "Invalid exp date",
+                    "any.required": "Required",
+                }),
             cvv: Joi.string().length(3).required().messages({
                 "string.empty": "Required",
                 "string.length": "Maximum 3 digits",

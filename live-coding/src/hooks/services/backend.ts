@@ -121,7 +121,8 @@ export const postPayment = () => {
 
             // Api request
             // TODO: Bind endpoint request
-            await wait(3000)
+            // await wait(3000)
+            console.log(payload)
 
             // After Request state
             setState((old: any) => ({
