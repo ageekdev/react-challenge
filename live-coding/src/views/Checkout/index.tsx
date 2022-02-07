@@ -54,10 +54,7 @@ const PageCheckout: FC<InterfaceCheckoutProps> = ({
 
     const [, setLocation] = useLocation()
 
-    const {
-        state: { loading },
-        post,
-    } = postPayment()
+    const { state, post } = postPayment()
 
     const CartItems: TypeCartItems = useSelector(
         (state: RootState) => state.cart
@@ -73,28 +70,20 @@ const PageCheckout: FC<InterfaceCheckoutProps> = ({
     )
 
     const onSubmit = (values: TypeCheckoutFormValues) => {
-        console.log("on submit")
-        toast.promise(
-            post({
-                paymentInfo: {
-                    cardInfo: {
-                        cardNo: `${values.card_number}`,
-                        cardCVV: `${values.cvv}`,
-                        cardExpiryDate: `${values.card_expire}`,
-                    },
-                    email: `${values.email}`,
+        post({
+            paymentInfo: {
+                cardInfo: {
+                    cardNo: `${values.card_number}`,
+                    cardCVV: `${values.cvv}`,
+                    cardExpiryDate: `${values.card_expire}`,
                 },
-                products: CartItems.map((product) => ({
-                    id: product.id,
-                    quantity: product.qty,
-                })),
-            }),
-            {
-                loading: "Paying...",
-                success: "Success",
-                error: "Something went wrong",
-            }
-        )
+                email: `${values.email}`,
+            },
+            products: CartItems.map((product) => ({
+                id: product.id + "",
+                quantity: product.qty,
+            })),
+        })
     }
 
     // Redirect on empty cart
@@ -104,6 +93,22 @@ const PageCheckout: FC<InterfaceCheckoutProps> = ({
             toast.error("Empty products. Please add some.")
         }
     }, [CartItems])
+
+    useEffect(() => {
+        if (!state.loading && typeof state.data === "object" && state.error) {
+            // has error
+            toast.success(state.error)
+        }
+        if (
+            !state.loading &&
+            typeof state.data === "object" &&
+            state.data.requestId
+        ) {
+            // successful
+            setLocation("/")
+            toast.success("Payment successful")
+        }
+    }, [state])
 
     return (
         <LayoutCenter>
@@ -136,7 +141,7 @@ const PageCheckout: FC<InterfaceCheckoutProps> = ({
                 <CheckoutForm
                     onSuccess={onSubmit}
                     submitText={`Pay ${totalPrice.toLocaleString()} MMK`}
-                    loading={loading}
+                    loading={state.loading}
                 />
             </Container>
         </LayoutCenter>
