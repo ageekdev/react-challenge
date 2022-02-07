@@ -28,6 +28,7 @@ import {
     Form,
     FieldGroups,
     FieldsMerge,
+    Button,
 } from "./index.styled"
 
 type TypeCheckoutFormDefaultValues = {
@@ -231,9 +232,9 @@ const CheckoutForm: FC<CheckoutFormProps> = ({
                 </FieldGroups>
 
                 <Actions>
-                    <button disabled={state.$auto_invalid || loading}>
+                    <Button disabled={state.$auto_invalid || loading}>
                         {submitText}
-                    </button>
+                    </Button>
                 </Actions>
             </Form>
         </Container>

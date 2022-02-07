@@ -111,4 +111,21 @@ export const Actions = styled.article`
     justify-content: center;
 `
 
+export const Button = styled.button`
+    ${normalTransitions()}
+
+    padding: 12px 24px 10px 24px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #dca16b;
+    box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+        box-shadow: none;
+    }
+`
+
 export const Fields = styled.article.attrs(() => ({ className: "fields" }))``
