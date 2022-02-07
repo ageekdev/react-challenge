@@ -1,4 +1,6 @@
 import styled, { css } from "styled-components"
+import master from "@components/png/master.png"
+import visa from "@components/png/visa.png"
 
 import {
     resetButton,
@@ -83,6 +85,18 @@ export const Input = styled.input`
     &::placeholder {
         opacity: 0.5;
     }
+    ${({ cardType = null }: { cardType?: string | null | undefined }) => {
+        return (
+            cardType &&
+            css`
+                transition: none;
+                background-image: url(${cardType === "visa" ? visa : master});
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-position: center right;
+            `
+        )
+    }}
 `
 
 export const ErrorMessage = styled.div`

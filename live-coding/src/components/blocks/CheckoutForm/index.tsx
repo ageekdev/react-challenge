@@ -13,6 +13,7 @@ import {
     validateExpDate,
     formatCardNumber,
     formatCardExpiry,
+    getCardType,
 } from "@utils/creditcardutils"
 
 // Styled Elements
@@ -122,6 +123,10 @@ const CheckoutForm: FC<CheckoutFormProps> = ({
         [state.$errors]
     )
 
+    const determineCardType = useCallback(() => {
+        return getCardType(state.$data["card_number"])
+    }, [state.$data["card_number"]])
+
     const onSubmit = (e: SyntheticEvent) => {
         e.preventDefault()
 
@@ -176,6 +181,7 @@ const CheckoutForm: FC<CheckoutFormProps> = ({
                             </FieldLabel>
 
                             <Input
+                                cardType={determineCardType()}
                                 {...register.input({
                                     name: "card_number",
                                     onChange: formatter.cardNumber,
